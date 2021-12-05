@@ -1,0 +1,35 @@
+{
+	"variables": {
+	"aws_access_key": "{{ aws_access_key }}",
+	"aws_secret_key": "{{ aws_secret_key }}"
+	},
+	"builders": [{
+		"type": "amazon-ebs",
+		"access_key": "{{user `aws_access_key`}}",
+		"secret_key": "{{user `aws_secret_key`}}",
+		"region": "us-east-1",
+		"source_ami": "ami-0b0af3577fe5e3532",
+		"instance_type": "t3.medium",
+		"ssh_username": "ec2-user",
+		"ami_name": "packer-zabbix-server",
+        "force_deregister": true,
+        "force_delete_snapshot": true
+    }],
+    "provisioners": [
+      {
+        "type": "file",
+        "source": "./ansible",
+        "destination": "/tmp/ansible"
+      },
+      {
+          "type": "shell",
+          "inline": [
+            "ls /tmp",
+            "ls /tmp/ansible",
+            "sudo dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm",
+            "sudo dnf -y install ansible git",
+            "ansible-playbook --connection=local /tmp/ansible/playbook.yml"
+          ]
+        }
+    ]
+}

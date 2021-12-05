@@ -1,0 +1,11 @@
+---
+- name: Install packer Ubuntu
+  apt: name=packer state=latest
+
+- name: Copy template build
+  template:
+    src: build.json
+    dest: /tmp
+
+- name: Execute packer
+  command: packer build ./packer/build.json
