@@ -8,4 +8,4 @@
     dest: /tmp
 
 - name: Execute packer
-  command: packer build ./packer/build.json
+  command: packer build /tmp/build.json
